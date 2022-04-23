@@ -94,7 +94,7 @@ class Controller:
         if resp['status'] != 250:
             raise Exception('Request failed')
 
-    async def add_onion(self, onion):
+    async def add_onion(self, onion, wait=False):
         key_str = '{}:{}'.format(onion.key_type, onion.key)
         ports = onion.ports
         ports_str = ' '.join('Port={},{}'.format(k, ports[k]) for k in ports)
@@ -107,4 +107,14 @@ class Controller:
             key_type, key = kwargs['PrivateKey'].split(':', maxsplit=1)
             onion.key_type = key_type
             onion.key = key
+        if wait:
+            event = asyncio.Event()
+            async def hs_desc(e):
+                if e.address != onion.id:
+                    return
+                if e.action == 'UPLOADED':
+                    event.set()
+            await self.events.on('HS_DESC', hs_desc)
+            await event.wait()
+            await self.events.off('HS_DESC', hs_desc)
         return onion

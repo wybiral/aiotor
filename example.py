@@ -22,7 +22,8 @@ async def main():
     onion = onions.Onion()
     # port 80 on the onion address will map to localhost:8000
     onion.ports[80] = 'localhost:8000'
-    await c.add_onion(onion)
+    print('adding onion...')
+    await c.add_onion(onion, wait=True)
     print('serving {} at {}.onion'.format(onion.ports[80], onion.id))
 
     # listen for bandwidth events using bw_event handler
