@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/wybiral/aiotor",
     packages=['aiotor'],
-    install_requires=[],
+    install_requires=['cryptography'],
     license='MIT',
     classifiers=[
         "Programming Language :: Python :: 3",
