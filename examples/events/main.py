@@ -1,4 +1,4 @@
-from aiotor.controller import Controller
+import aiotor
 import asyncio
 import sys
 
@@ -9,7 +9,7 @@ async def bw_event(event):
 async def main():
     # connect to tor controller and authenticate
     # 9151 is Tor Browser control port
-    c = Controller(host='127.0.0.1', port=9151)
+    c = aiotor.Controller(host='127.0.0.1', port=9151)
     await c.connect()
     await c.authenticate()
     # listen for bandwidth events using bw_event handler

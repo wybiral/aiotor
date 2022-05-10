@@ -1,16 +1,15 @@
-from aiotor.controller import Controller
-from aiotor import onions
+import aiotor
 import asyncio
 import sys
 
 async def main():
     # connect to tor controller and authenticate
     # 9151 is Tor Browser control port
-    c = Controller(host='127.0.0.1', port=9151)
+    c = aiotor.Controller(host='127.0.0.1', port=9151)
     await c.connect()
     await c.authenticate()
     # create an onion
-    onion = onions.Onion()
+    onion = aiotor.onions.Onion()
     # map port 80 on the onion to localhost:8000
     onion.ports[80] = 'localhost:8000'
     print('adding onion...')

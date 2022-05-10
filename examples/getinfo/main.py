@@ -1,11 +1,11 @@
-from aiotor.controller import Controller
+import aiotor
 import asyncio
 import sys
 
 async def main():
     # connect to tor controller and authenticate
     # 9151 is Tor Browser control port
-    c = Controller(host='127.0.0.1', port=9151)
+    c = aiotor.Controller(host='127.0.0.1', port=9151)
     await c.connect()
     await c.authenticate()
     # get tor version
