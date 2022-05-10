@@ -76,7 +76,7 @@ class Parser:
                     a = self.text.index('=\r\n', self.index)
                     key = self.text[self.index:a]
                     a += 3
-                    b = self.text.index('.\r\n', a)
+                    b = self.text.index('\r\n.\r\n', a)
                     value = self.text[a:b]
                     b += 3
                     self.index = b
