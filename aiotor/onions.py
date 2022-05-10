@@ -11,20 +11,23 @@ class Onion:
         self.id = None
         self.ports = {}
 
-def generate_ed25519():
-    ''' generate new ed25519 Onion object '''
-    private_key = ed25519.Ed25519PrivateKey.generate()
-    return onion_from_ed25519(private_key)
+    @classmethod
+    def random(cls):
+        ''' generate new random Onion object '''
+        private_key = ed25519.Ed25519PrivateKey.generate()
+        return cls.from_key(private_key)
 
-def onion_from_ed25519(private_key):
-    ''' create Onion object from existing ed25519 key '''
-    onion = Onion()
-    onion.key_type = 'ED25519-V3'
-    onion.key = key_from_ed25519(private_key)
-    onion.id = id_from_ed25519(private_key.public_key())
-    return onion
+    @classmethod
+    def from_key(cls, private_key):
+        ''' create Onion object from existing ed25519 key '''
+        onion = cls()
+        onion.key_type = 'ED25519-V3'
+        onion.key = format_key(private_key)
+        onion.id = calculate_id(private_key.public_key())
+        return onion
 
-def key_from_ed25519(private_key):
+
+def format_key(private_key):
     ''' convert ed25519 key to Tor format '''
     b = private_key.private_bytes(
         encoding=serialization.Encoding.Raw,
@@ -39,7 +42,7 @@ def key_from_ed25519(private_key):
     p[31] |= 64
     return base64.b64encode(bytes(p)).decode('utf8')
 
-def id_from_ed25519(public_key):
+def calculate_id(public_key):
     ''' calculate onion service ID from ed25519 public key '''
     b = public_key.public_bytes(
         encoding=serialization.Encoding.Raw,

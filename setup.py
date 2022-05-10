@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='python-aiotor',
-    version='0.1.1',
+    version='0.2.0',
     author='Davy Wybiral',
     author_email="davy.wybiral@gmail.com",
     description='asyncio Tor controller client',
