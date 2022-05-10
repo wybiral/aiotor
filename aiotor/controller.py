@@ -118,3 +118,8 @@ class Controller:
             await event.wait()
             await self.events.off('HS_DESC', hs_desc)
         return onion
+
+    async def del_onion(self, onion):
+        resp = await self.io.cmd('DEL_ONION ' + onion.id)
+        if resp['status'] != 250:
+            raise Exception('Request failed')
