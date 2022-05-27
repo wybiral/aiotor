@@ -2,8 +2,8 @@ import asyncio
 import hashlib
 import hmac
 from os import urandom
-from . import events
-from .onions import Onion
+from .events import Events
+from .onions import Onions
 from .textprotocol import parse, parse_keywords, TextProtocol
 
 class Controller:
@@ -11,7 +11,8 @@ class Controller:
     def __init__(self, host='127.0.0.1', port=9051):
         self.host = host
         self.port = port
-        self.events = events.Events(self)
+        self.events = Events(self)
+        self.onions = Onions(self)
         self.io = None
         self.auth = {
             'methods': [],
@@ -90,36 +91,5 @@ class Controller:
 
     async def signal(self, signal):
         resp = await self.io.cmd('SIGNAL ' + signal)
-        print(resp)
-        if resp['status'] != 250:
-            raise Exception('Request failed')
-
-    async def add_onion(self, onion, wait=False):
-        key_str = '{}:{}'.format(onion.key_type, onion.key)
-        ports = onion.ports
-        ports_str = ' '.join('Port={},{}'.format(k, ports[k]) for k in ports)
-        resp = await self.io.cmd('ADD_ONION ' + key_str + ' ' + ports_str)
-        if resp['status'] != 250:
-            raise Exception('Request failed')
-        args, kwargs = parse(' '.join(resp['lines']))
-        onion.id = kwargs['ServiceID']
-        if 'PrivateKey' in kwargs:
-            key_type, key = kwargs['PrivateKey'].split(':', maxsplit=1)
-            onion.key_type = key_type
-            onion.key = key
-        if wait:
-            event = asyncio.Event()
-            async def hs_desc(e):
-                if e.address != onion.id:
-                    return
-                if e.action == 'UPLOADED':
-                    event.set()
-            await self.events.on('HS_DESC', hs_desc)
-            await event.wait()
-            await self.events.off('HS_DESC', hs_desc)
-        return onion
-
-    async def del_onion(self, onion):
-        resp = await self.io.cmd('DEL_ONION ' + onion.id)
         if resp['status'] != 250:
             raise Exception('Request failed')

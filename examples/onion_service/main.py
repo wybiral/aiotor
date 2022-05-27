@@ -14,7 +14,7 @@ async def main():
     onion.ports[80] = 'localhost:8000'
     print('adding onion...')
     # start serving the onion and wait for publication
-    await c.add_onion(onion, wait=True)
+    await c.onions.add(onion, wait=True)
     print('serving {} at {}.onion'.format(onion.ports[80], onion.id))
     # run until terminated
     while True:

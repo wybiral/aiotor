@@ -1,7 +1,56 @@
+import asyncio
 import base64
 from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives import serialization
 import hashlib
+from .textprotocol import parse
+
+class Onions:
+
+    def __init__(self, controller):
+        self.controller = controller
+        self.__onions = {}
+
+    async def add(self, onion, wait=False):
+        ''' add an Onion to the controller as an ephemeral onion service '''
+        if onion.id in self.__onions:
+            return
+        controller = self.controller
+        key_str = '{}:{}'.format(onion.key_type, onion.key)
+        ports = onion.ports
+        ports_str = ' '.join('Port={},{}'.format(k, ports[k]) for k in ports)
+        cmd_str = 'ADD_ONION ' + key_str + ' ' + ports_str
+        resp = await controller.io.cmd(cmd_str)
+        if resp['status'] != 250:
+            raise Exception('Request failed')
+        args, kwargs = parse(' '.join(resp['lines']))
+        onion.id = kwargs['ServiceID']
+        if 'PrivateKey' in kwargs:
+            key_type, key = kwargs['PrivateKey'].split(':', maxsplit=1)
+            onion.key_type = key_type
+            onion.key = key
+        self.__onions[onion.id] = onion
+        if wait:
+            event = asyncio.Event()
+            async def hs_desc(e):
+                if e.address != onion.id:
+                    return
+                if e.action == 'UPLOADED':
+                    event.set()
+            await controller.events.on('HS_DESC', hs_desc)
+            await event.wait()
+            await controller.events.off('HS_DESC', hs_desc)
+        return onion
+
+    async def remove(self, onion):
+        ''' remove an Onion service from the controller '''
+        controller = self.controller
+        resp = await controller.io.cmd('DEL_ONION ' + onion.id)
+        if resp['status'] != 250:
+            raise Exception('Request failed')
+        if onion.id in self.__onions:
+            del self.__onions[onion.id]
+
 
 class Onion:
 
@@ -57,4 +106,3 @@ def calculate_id(public_key):
     combined = b + c + b'\x03'
     service_id = base64.b32encode(combined)
     return service_id.decode('utf8').replace('=', '').lower()
-
