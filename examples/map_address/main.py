@@ -1,3 +1,9 @@
+'''
+Example of running a basic HTTP server as an onion service and then mapping an
+address to that onion. All requests made on this Tor instance should map
+testing.com to the local "Hello world!" server.
+'''
+
 import aiotor
 import asyncio
 import sys

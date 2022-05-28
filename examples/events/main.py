@@ -1,3 +1,7 @@
+'''
+Example of adding event handlers using events.add()
+'''
+
 import aiotor
 import asyncio
 import sys

@@ -1,3 +1,7 @@
+'''
+Example of querying the Tor controller using getinfo()
+'''
+
 import aiotor
 import asyncio
 import sys

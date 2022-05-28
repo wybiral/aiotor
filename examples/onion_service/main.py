@@ -1,3 +1,8 @@
+'''
+Example of creating an onion service mapping to a local port. By default onions
+are configured to randomly generate the id unless you specify your own key.
+'''
+
 import aiotor
 import asyncio
 import sys

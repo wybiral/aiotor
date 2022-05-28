@@ -1,3 +1,9 @@
+'''
+Example of creating an onion service that maps to a local port using a supplied
+ed25519 public key. This way you can reuse the key to have a permanent onion id
+instead of also having them be randomly generated (which is the default).
+'''
+
 import aiotor
 from aiotor.onions import Onion
 import asyncio
