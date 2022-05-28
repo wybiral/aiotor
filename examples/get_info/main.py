@@ -1,5 +1,5 @@
 '''
-Example of querying the Tor controller using getinfo()
+Example of querying the Tor controller using get_info()
 '''
 
 import aiotor
@@ -13,12 +13,12 @@ async def main():
     await c.connect()
     await c.authenticate()
     # get tor version
-    info = await c.getinfo('version')
-    print('Tor version:', info['version'])
+    version = await c.get_info('version')
+    print('Tor version:', version)
     # get current circuits
-    info = await c.getinfo('circuit-status')
+    circuits = await c.get_info('circuit-status')
     print('\nCircuits:')
-    print(info['circuit-status'])
+    print(circuits)
 
 # ugh, windows
 if sys.platform == 'win32':

@@ -82,12 +82,13 @@ class Controller:
         cookie = open(self.auth['cookiefile'], 'rb').read()
         return await self.io.cmd('AUTHENTICATE ' + cookie.hex())
 
-    async def getinfo(self, key):
+    async def get_info(self, key):
         resp = await self.io.cmd('GETINFO ' + key)
         if resp['status'] != 250:
             raise Exception('Request failed')
         text = ' '.join(resp['lines'])
-        return parse_keywords(text)
+        obj = parse_keywords(text)
+        return obj[key]
 
     async def signal(self, signal):
         resp = await self.io.cmd('SIGNAL ' + signal)
