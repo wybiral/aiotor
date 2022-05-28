@@ -93,3 +93,10 @@ class Controller:
         resp = await self.io.cmd('SIGNAL ' + signal)
         if resp['status'] != 250:
             raise Exception('Request failed')
+
+    async def map_address(self, src, dst):
+        x = 'MAPADDRESS {}={}'.format(src, dst)
+        resp = await self.io.cmd(x)
+        if resp['status'] != 250:
+            raise Exception('Request failed')
+        return resp
