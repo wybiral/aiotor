@@ -8,7 +8,7 @@ setuptools.setup(
     version='0.4.0',
     author='Davy Wybiral',
     author_email="davy.wybiral@gmail.com",
-    description='asyncio Tor controller client',
+    description='asyncio Tor controller library',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/wybiral/aiotor",
