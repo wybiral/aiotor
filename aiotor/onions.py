@@ -37,9 +37,9 @@ class Onions:
                     return
                 if e.action == 'UPLOADED':
                     event.set()
-            await controller.events.on('HS_DESC', hs_desc)
+            await controller.events.add('HS_DESC', hs_desc)
             await event.wait()
-            await controller.events.off('HS_DESC', hs_desc)
+            await controller.events.remove('HS_DESC', hs_desc)
         return onion
 
     async def remove(self, onion):

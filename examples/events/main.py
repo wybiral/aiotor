@@ -17,9 +17,9 @@ async def main():
     await c.connect()
     await c.authenticate()
     # listen for bandwidth update event
-    await c.events.on('BW', bw_event)
+    await c.events.add('BW', bw_event)
     # listen for circuit update event
-    await c.events.on('CIRC', circ_event)
+    await c.events.add('CIRC', circ_event)
     # run until terminated
     while True:
         await asyncio.sleep(1)

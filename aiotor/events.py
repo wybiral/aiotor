@@ -26,14 +26,14 @@ class Events:
             if resp['status'] != 250:
                 raise Exception('unable to send SETEVENTS')
 
-    async def on(self, event, listener):
+    async def add(self, event, listener):
         ''' add listener for event type '''
         if event not in self.__listeners:
             self.__listeners[event] = set()
         self.__listeners[event].add(listener)
         await self.__update_events()
 
-    async def off(self, event, listener):
+    async def remove(self, event, listener):
         ''' remove listener for event type '''
         if event in self.__listeners:
             self.__listeners[event].discard(listener)
