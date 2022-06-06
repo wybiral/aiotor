@@ -24,6 +24,7 @@ class Controller:
         r, w = await asyncio.open_connection(self.host, self.port)
         self.io = TextProtocol(r, w, event_queue=self.events.queue)
         self.__parse_protocolinfo(await self.io.cmd('PROTOCOLINFO 1'))
+        self.events.start_loop()
 
     def __parse_protocolinfo(self, resp):
         if resp['status'] != 250:

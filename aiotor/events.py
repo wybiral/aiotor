@@ -7,6 +7,9 @@ class Events:
         self.queue = asyncio.Queue()
         self.__listeners = {}
         self.__events = set()
+
+    def start_loop(self):
+        ''' start event handler loop '''
         self.task = asyncio.create_task(self.__loop())
 
     async def __loop(self):
